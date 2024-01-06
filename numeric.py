@@ -1,8 +1,10 @@
 import sympy as sp
-from sympy import symbols
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 from flask import Flask, render_template, request
+from io import BytesIO
+import base64
 
 app = Flask(__name__)
 
@@ -15,7 +17,7 @@ tol = None  # Initialize tol to be set by the user
 x_points = np.linspace(0, 30, 1000)
 
 def gfunc(fx):
-    x = symbols('x')
+    x = sp.symbols('x')
     gx = fx + x
     return gx
 
@@ -36,6 +38,30 @@ def run_optimization(fx, x_0, max_iter, tol):
         x_0 = x_val
     return result
 
+def update(frame, ax):
+    if frame < len(x_points):
+        values = [gfunc(fx).subs(x, i) for i in x_points[:frame]]
+
+        # Clear existing lines from the axes
+        for line in ax.lines:
+            line.remove()
+
+        # Plot the updated data
+        ax.plot(x_points[:frame], xfunc(x_points[:frame]), label='x')
+        ax.plot(x_points[:frame], values, label='g(x)')
+        ax.plot(x_points[:frame], x_axis(x_points[:frame]), label='x-axis')
+        ax.legend()
+        ax.set_title(f'Iteration: {frame}')
+
+        # Save the updated plot as an image
+        buf = BytesIO()
+        plt.savefig(buf, format='png')
+        buf.seek(0)
+        plot_data = base64.b64encode(buf.getvalue()).decode('utf-8')
+        return plot_data
+    else:
+        return None
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     global fx, x_0, max_iter, tol
@@ -52,12 +78,12 @@ def index():
 def plot():
     global fx
     if fx is not None:
-        values = [gfunc(fx).subs(x, i) for i in x_points]
-        plt.plot(x_points, xfunc(x_points), x_points, values, x_points, x_axis(x_points))
-        plt.savefig('static/plot.png')
+        fig, ax = plt.subplots()
+        ani = FuncAnimation(fig, update, frames=max_iter, fargs=(ax,), interval=500, blit=False)
+        ani.save('static/plot.gif', writer='imagemagick')
         plt.close()
-        return render_template('plot.html')
-    return "Please set the function first."
+        return render_template('plot.html', plot_exists=True)
+    return render_template('plot.html', plot_exists=False)
 
 if __name__ == '__main__':
     app.run(debug=True)
