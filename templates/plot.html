@@ -1,1 +1,61 @@
-<img src="static/plot.png" alt="Ferrari">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plot Page</title>
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        /* Added style for the message */
+        .message {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #ffcccc;
+            color: #ff0000;
+            border: 1px solid #ff0000;
+            border-radius: 5px;
+            max-width: 500px;
+            margin: 20px auto;
+        }
+
+        /* Added style for the plot image */
+        #plot-image {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Plot Page</h1>
+
+    {% if plot_exists %}
+        <!-- Display the animated plot -->
+        <div>
+            <img src="static/plot.gif" id="plot-image" alt="Animated Plot">
+        </div>
+    {% else %}
+        <!-- Display the error message -->
+        <div class="message">
+            Please return back and enter the required values first.
+        </div>
+    {% endif %}
+
+    <!-- Your plot code goes here -->
+    <div id="plot">
+        <!-- The content of your plot goes here -->
+    </div>
+</body>
+</html>
+
