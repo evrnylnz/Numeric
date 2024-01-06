@@ -56,8 +56,9 @@ def plot():
         plt.plot(x_points, xfunc(x_points), x_points, values, x_points, x_axis(x_points))
         plt.savefig('static/plot.png')
         plt.close()
-        return render_template('plot.html')
-    return "Please set the function first."
+        return render_template('plot.html', plot_exists=True)
+    return render_template('plot.html', plot_exists=False)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

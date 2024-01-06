@@ -98,7 +98,7 @@
         <label for="max_iter">Enter the maximum number of iterations: </label>
         <input type="text" name="max_iter" required><br>
 
-        <label for="tol">Enter the tolerance: </label>
+        <label for="tol">Enter the tolerance: (e.g., 1e-6)</label>
         <input type="text" name="tol" required><br>
 
         <input type="submit" value="Run Optimization">
@@ -122,6 +122,26 @@
         </table>
     {% endif %}
 
-    <a href="{{ url_for('plot') }}" target="_blank">View Plot</a>
+    <style>
+        /* ... (diğer stiller) ... */
+    
+        /* Stil eklenen link */
+        .plot-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+    
+        .plot-link:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    
+    <a href="{{ url_for('plot') }}" target="_blank" class="plot-link">View Plot</a>
+
 </body>
 </html>
